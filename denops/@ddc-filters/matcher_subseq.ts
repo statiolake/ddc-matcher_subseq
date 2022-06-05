@@ -25,7 +25,9 @@ function containsSubsequence(haystack: string, needle: string): boolean {
 export class Filter extends BaseFilter {
   filter({ completeStr, candidates }: FilterArguments): Promise<Candidate[]> {
     const res = completeStr
-      ? candidates.filter((c) => containsSubsequence(c.word, completeStr))
+      ? candidates.filter((c) =>
+        containsSubsequence(c.abbr || c.word, completeStr)
+      )
       : candidates;
     return Promise.resolve(res);
   }
