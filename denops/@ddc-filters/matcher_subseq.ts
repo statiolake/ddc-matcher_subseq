@@ -1,8 +1,8 @@
+import { Candidate } from "https://lib.deno.dev/x/ddc_vim@v1/types.ts";
 import {
   BaseFilter,
-  Candidate,
-} from "https://deno.land/x/ddc_vim@v0.5.0/types.ts#^";
-import { FilterArguments } from "https://deno.land/x/ddc_vim@v0.5.0/base/filter.ts#^";
+  FilterArguments,
+} from "https://lib.deno.dev/x/ddc_vim@v1/base/filter.ts";
 
 function containsSubsequence(haystack: string, needle: string): boolean {
   if (haystack.length < needle.length) return false;
@@ -22,13 +22,20 @@ function containsSubsequence(haystack: string, needle: string): boolean {
   return nidx == needle.length;
 }
 
-export class Filter extends BaseFilter {
-  filter({ completeStr, candidates }: FilterArguments): Promise<Candidate[]> {
+type Params = {};
+
+export class Filter extends BaseFilter<Params> {
+  filter(
+    { completeStr, candidates }: FilterArguments<Params>,
+  ): Promise<Candidate[]> {
     const res = completeStr
       ? candidates.filter((c) =>
         containsSubsequence(c.abbr || c.word, completeStr)
       )
       : candidates;
     return Promise.resolve(res);
+  }
+  override params(): Params {
+    return {};
   }
 }
